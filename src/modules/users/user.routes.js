@@ -11,4 +11,5 @@ router.get(
     userController.getMe
 );
 
+router.get("/redis-test", authMiddleware, userController.redisTest);
 module.exports = router;

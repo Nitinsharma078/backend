@@ -1,4 +1,5 @@
 const User = require("./user.model");
+const { redisClient } = require("../../config/redis");
 
 const getMe = async (req, res, next) => {
     try {
@@ -26,7 +27,19 @@ const getMe = async (req, res, next) => {
         next(error);
     }
 };
+const redisTest = async () => {
+    if (!redisClient || !redisClient.isReady) {
+        const error = new Error("Redis is unavailable");
+        error.statusCode = 503;
+        throw error;
+    }
 
+    await redisClient.set("test:name", "Nitin");
+    const value = await redisClient.get("test:name");
+
+    return { key: "test:name", value };
+};
 module.exports = {
     getMe,
+    redisTest,
 };
